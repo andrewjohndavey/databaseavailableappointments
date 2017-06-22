@@ -1,0 +1,32 @@
+#%RAML 0.8
+title: Database Available Appointments
+version: 0.1
+#baseUri: http://localhost:8080
+baseUri: https://mocksvc.mulesoft.com/mocks/be48e8f4-ecf2-4678-983d-7380fd68ed57
+/appointments:
+  get:
+    description: Get a list of available appointments from the database
+    queryParameters:
+      appointmentdate:
+        type: string
+        example: "2017-01-01"
+      fromtime:
+        type: string
+        example: "12:00:00"
+    responses: 
+      200:
+        description: A successful response
+        body: 
+          application/json:
+            example: |
+              [
+              {
+                "date": "2017-01-01",
+                "time": "12:00"
+              },
+              {
+                "date": "2017-01-02",
+                "time": "13:00"  
+            
+              }
+              ]
