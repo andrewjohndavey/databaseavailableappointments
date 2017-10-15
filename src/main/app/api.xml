@@ -21,36 +21,6 @@ http://www.mulesoft.org/schema/mule/api-platform-gw http://www.mulesoft.org/sche
     </flow>
     <flow name="get:/appointments:api-config">
         <set-payload value="[&#xA;{&#xA;  &quot;date&quot;: &quot;2017-01-01&quot;,&#xA;  &quot;time&quot;: &quot;12:00&quot;&#xA;},&#xA;{&#xA;  &quot;date&quot;: &quot;2017-01-02&quot;,&#xA;  &quot;time&quot;: &quot;13:00&quot;  &#xA;&#xA;}&#xA;]" doc:name="Set Payload"/>
-        <db:select config-ref="MySQL_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[select 
-booking.booking_id,
-booking.start_datetime,
-booking.End_DateTime,
-booking.Event_ID,
-booking.Location_ID,
-location.location_group_id
-from mule.booking inner join mule.Location on booking.location_id = location.location_id]]></db:parameterized-query>
-        </db:select>
-        <dw:transform-message doc:name="Transform Message">
-            <dw:input-payload doc:sample="sample_data/list_map.dwl"/>
-            <dw:set-payload><![CDATA[%dw 1.0
-%output application/json
-%function available(roomstatus) (roomstatus == true)
----
-flatten
-{
-	Available_Rooms: payload filter available($.start_datetime < now and $.End_DateTime > now) map {
-		Event_ID: $.Event_ID,
-		Start_DateTime: $.start_datetime,
-		End_DateTime: $.End_DateTime,
-		Event_ID: $.Event_ID,
-		Location_ID: $.Location_ID,
-		Location_Group_ID: $.location_group_id,
-		Booking_ID: $.booking_id
-		
-	}
-} ]]></dw:set-payload>
-        </dw:transform-message>
     </flow>
     <apikit:mapping-exception-strategy name="api-apiKitGlobalExceptionMapping">
         <apikit:mapping statusCode="404">
